@@ -1,4 +1,3 @@
-</html>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,16 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
 
-    <title>Home Page</title>
+    <title>Contact Page</title>
 </head>
 
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
@@ -43,8 +43,8 @@
 
                     <ul class="nav ms-auto">
 
-                        <li class="nav-item"><a class="nav-link active " href="index.htm">Home</a></li>
-
+                        <li class="nav-item"><a class="nav-link  " href="index.htm">Home</a></li>
+    
                     </ul>
 
                     <ul class="nav ms-auto">
@@ -56,8 +56,64 @@
     </nav>
 
 
-    <h1>Welcome to HTML/CSS/JS and Bootstrap</h1>
 
+
+
+
+    <div class="container mt-5">
+        <?php
+        // Database credentials
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "at3_db";
+
+        // Get the question ID from the URL, default to 1 if not provided
+        $id = isset($_GET['id']) ? intval($_GET['id']) : 1;
+
+        try {
+            // Establish a database connection
+            $conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8mb4", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Fetch the question, answer, and DESCRIPTION
+            $sql = "SELECT QUESTION, ANSWER, DESCRIPTION FROM knowledgebase WHERE ID = :id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                // Display the content in a table layout
+                echo "<table class='table table-bordered'>";
+                echo "<thead class='table-dark'>";
+                echo "<tr>";
+                echo "<th colspan='2'>Question #{$id}: " . htmlspecialchars($row['QUESTION']) . "</th>";
+                echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+                echo "<tr>";
+                echo "<td><strong>Answer:</strong></td>";
+                echo "<td>" . nl2br(htmlspecialchars($row['ANSWER'])) . "</td>";
+                echo "</tr>";
+                echo "<tr>";
+                echo "<td><strong>Description:</strong></td>";
+                echo "<td>" . nl2br(htmlspecialchars($row['DESCRIPTION'])) . "</td>";
+                echo "</tr>";
+                echo "</tbody>";
+                echo "</table>";
+
+            } else {
+                // If no content is found for the given ID
+                echo "<div class='alert alert-warning'>No content found for ID $id</div>";
+            }
+        } catch (PDOException $e) {
+            // Display connection error
+            echo "<div class='alert alert-danger'>Connection failed: " . htmlspecialchars($e->getMessage()) . "</div>";
+        }
+        ?>
+    </div>
+
+  
 </body>
-
-</html> 
+</html>
