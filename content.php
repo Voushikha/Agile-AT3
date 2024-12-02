@@ -77,7 +77,7 @@
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Fetch the question, answer, and DESCRIPTION
-            $sql = "SELECT QUESTION, ANSWER, DESCRIPTION FROM knowledgebase WHERE ID = :id";
+            $sql = "SELECT QUESTION, ANSWER, DESCRIPTION FROM content WHERE ID = :id";
             $stmt = $conn->prepare($sql);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
